@@ -4,10 +4,13 @@
  - Fetches the latest User Reviews using CSS
  - Stores them into a CSV file
 
+ Analytics:
+ - Analyze all the negative and neutral reviews
+ - Extract out app features that are impacted
+ - Store all negative and neutral reviews in a file
+
  What's Next:
-  - Applying analytics on these reviews
-  - Fetching some areas to improve
-  - Fetching new user-requirements
+  - Fetching new user-requirements/user suggestions
   - Improving app Quality
 
 How to Run:
