@@ -18,6 +18,6 @@ def getReviews package
   end
 end
 
-
-package_name = " "
+#put the package name of the app from Play Store
+package_name = ""
 getReviews package_name

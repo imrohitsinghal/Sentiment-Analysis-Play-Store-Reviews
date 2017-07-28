@@ -21,6 +21,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    sentimental (1.4.1)
     slop (3.6.0)
     unf (0.1.4)
       unf_ext
@@ -34,6 +35,7 @@ DEPENDENCIES
   nokogiri (~> 1.8.0)
   pry
   rest-client
+  sentimental
 
 BUNDLED WITH
    1.14.6
