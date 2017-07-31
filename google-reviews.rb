@@ -18,6 +18,6 @@ def getReviews package
   end
 end
 
-#put the package name of the app from Play Store
-package_name = ""
+
+package_name = "com.delta.mobile.android"
 getReviews package_name
