@@ -19,5 +19,5 @@ def getReviews package
 end
 
 
-package_name = "com.delta.mobile.android"
+package_name = "<package_name>"
 getReviews package_name
