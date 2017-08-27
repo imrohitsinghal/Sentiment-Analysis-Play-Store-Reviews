@@ -1,17 +1,33 @@
-# Google-Play-Store-Reviews
+## Google-Play-Store-Reviews
+========
 
- - It parses HTML response from Google Play for a particular  android app
- - Fetches the latest User Reviews using CSS
- - Stores them into a CSV file
+## About:
+A small utility to generate useful data from reviews/feedback customers provide on Google Play Store. Helps you to focus on areas to improve in the app.
 
- Analytics:
- - Analyze all the negative and neutral reviews
- - Extract out app features that are impacted
- - Store all negative and neutral reviews in a file
+ - It gets Latest Feedback from Google Play for specified Android App
+ - Stores all the reviews into a CSV file(latest_reviews)
+ - Can be utilized to see what functionalities are appreciated by customers
 
- What's Next:
-  - Fetching new user-requirements/user suggestions
-  - Improving app Quality
+## Analytics:
+ - Extract all negative and neutral reviews
+ - Extract out App features and functionalities that are impacted or affected
+ - Stores all negative and neutral reviews in a file(negative_reviews)
 
-How to Run:
- - Enter your package_name = "com.package" and just run this
+## Output:
+- Generates a sorted HTML(Result.html) file which contains Impacted Area and Review
+- All the negative reviews are stored in a CSV file
+
+
+## How to Run:
+1. Fetch all the latest reviews about the app
+- rake PACKAGE_NAME=<"Enter app package name"> reviews:fetch
+
+2. Analyze and separate all negative and neutral reviews
+-  rake reviews:analyze
+
+3. Generate a HTML file
+ - rake reviews:output
+
+
+## What's Next:
+- Making this utility to run on various feedback/review sources like twitter, Facebook etc
