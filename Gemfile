@@ -1,3 +1,5 @@
+source 'http://rubygems.org'
+
 gem 'watir-webdriver'
 gem 'rest-client'
 gem 'nokogiri', '~> 1.8.0'
