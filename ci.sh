@@ -1,5 +1,7 @@
 #!/bin/bash
 
+npm install phatomjs
+
 #Ensure all required gems are installed
 bundle install --quiet
 
