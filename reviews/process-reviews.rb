@@ -6,13 +6,13 @@ class AnalyzeReviews
   def initialize
     @csv2 = CSV.open("csv/negative_reviews.csv", "wb")
     @csv3 = CSV.open("csv/functionality_reviews.csv", "wb")
-    @csv3 << ['# AREA', '# FEEDBACK']
+    @csv3 << ['AREA', 'FEEDBACK']
   end
 
 
   def affected_features string
     FEATURES.each do |keyword|
-      if string.include? keyword
+      if string.include? keyword.downcase
         @csv3 << [keyword, string]
         break
       end
