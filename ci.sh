@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 npm set registry https://registry.npmjs.org/
 npm list phantomjs || npm install phantomjs
