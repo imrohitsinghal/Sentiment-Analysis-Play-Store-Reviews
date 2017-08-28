@@ -1,6 +1,6 @@
 #!/bin/bash
 
-npm install phatomjs
+npm list phantomjs || npm install phantomjs
 
 #Ensure all required gems are installed
 bundle install --quiet
