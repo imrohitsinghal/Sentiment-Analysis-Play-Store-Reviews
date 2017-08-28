@@ -1,5 +1,6 @@
 #!/bin/bash
 
+npm set registry https://registry.npmjs.org/
 npm list phantomjs || npm install phantomjs
 
 #Ensure all required gems are installed
