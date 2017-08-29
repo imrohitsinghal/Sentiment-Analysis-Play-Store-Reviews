@@ -1,5 +1,4 @@
 ## Google-Play-Store-Reviews
-========
 
 ## About:
 A small utility to generate useful data from reviews/feedback customers provide on Google Play Store. Helps you to focus on areas to improve in the app.
@@ -19,14 +18,14 @@ A small utility to generate useful data from reviews/feedback customers provide 
 
 
 ## How to Run:
-1. Fetch all the latest reviews about the app
-- rake PACKAGE_NAME=<"Enter app package name"> reviews:fetch
+1. Fetch all the latest reviews about the app</br>
+  `rake PACKAGE_NAME=<"Enter app package name"> reviews:fetch`
 
-2. Analyze and separate all negative and neutral reviews
--  rake reviews:analyze
+2. Analyze and separate all negative and neutral reviews</br>
+  `rake reviews:analyze`
 
-3. Generate a HTML file
- - rake reviews:output
+3. Generate a HTML file</br>
+  `rake reviews:output`
 
 
 ## What's Next:
