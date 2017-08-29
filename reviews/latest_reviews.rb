@@ -10,7 +10,7 @@ $locator = {
 class FetchResponse
 
   def initialize(package = 'nil')
-    @csv     = CSV.open("csv/latest_reviews.csv", "wb")
+    @csv = CSV.open("csv/latest_reviews.csv", "wb")
     @package = PACKAGE_NAME
     @url     = "https://play.google.com/store/apps/details?id=#{@package}&hl=en"
   end
@@ -58,6 +58,7 @@ class FetchResponse
 
   def close
     @b.close
+    @csv.close
   end
 
 end

@@ -6,20 +6,25 @@ require_relative '../report/html_generator'
 $PROJECT_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '../'))
 
 namespace :reviews do
-  desc "Fetch all latest reviews"
-  task :fetch do
-    cleanup
-    FetchResponse.new(ENV['PACKAGE_NAME']).fetch_reviews
-  end
+  namespace :run do
+    desc "Run all"
+    task :all => [:fetch, :analyze, :output]
 
-  desc "Process all reviews"
-  task :analyze do
-    AnalyzeReviews.new.process
-  end
+    desc "Fetch all latest reviews"
+    task :fetch do
+      cleanup
+      FetchResponse.new(ENV['PACKAGE_NAME']).fetch_reviews
+    end
 
-  desc "Generate HTML Report"
-  task :output do
-    ProduceHtml.new.generate_html
+    desc "Process all reviews"
+    task :analyze do
+      AnalyzeReviews.new.process
+    end
+
+    desc "Generate HTML Report"
+    task :output do
+      ProduceHtml.new.generate_html
+    end
   end
 end
 

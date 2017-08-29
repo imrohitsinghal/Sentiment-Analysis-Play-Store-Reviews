@@ -29,6 +29,8 @@ class AnalyzeReviews
         affected_features row[1]
       end
     end
+    @csv3.close
+    @csv2.close
   end
 
 end
