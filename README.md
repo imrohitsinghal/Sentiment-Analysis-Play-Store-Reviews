@@ -1,4 +1,4 @@
-## Sentiment-Analyser-Play-Store-Reviews
+## Sentiment-Analyser
 
 ## About:
 A utility to generate useful data from reviews/feedback customers/users provide on Google Play Store. Helps you to focus on areas which needs improvement in the application.
@@ -8,7 +8,7 @@ A utility to generate useful data from reviews/feedback customers/users provide 
  - Gives you a report mentioning areas to improve with the feedbacks
  - Can be utilized to see what functionalities are appreciated by customers
 
-## Analytics:
+## Sentiment Analysis:
  - Extract all negative and neutral reviews by customers
  - Extract out App features/areas and functionalities that are impacted or affected
  - Stores all negative and neutral reviews in a file (negative_reviews.csv)
