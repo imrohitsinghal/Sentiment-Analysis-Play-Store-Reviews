@@ -15,6 +15,7 @@ A utility to generate useful data from reviews/feedback customers/users provide 
 
 ## Output:
 - Generates a sorted HTML (review_report.html) file which contains Impacted Area and Reviews related to each area/functionality
+![Screenshot](Report_23rdNov.png)
 ![Screenshot](Report_28thNov.png)
 - All the negative and newest reviews are stored in a CSV files
 
