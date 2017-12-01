@@ -14,7 +14,7 @@ sleep 2
 cd $CURRENT_DIR
 echo "CURRENT_DIR - " $CURRENT_DIR
 
-date=`expr $(date +"%d") - 1`
+date=`expr $(date -v -1d +"%d")`
 echo "*** FETCHING FOR PREVIOUS DAY ***"
 rake PACKAGE_NAME=com.vuclip.viu REVIEW_DATE=$date  reviews:run:all
 sleep 2
