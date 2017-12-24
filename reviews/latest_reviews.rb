@@ -1,4 +1,4 @@
-require 'watir-webdriver'
+require 'watir'
 
 $locator = {
   see_more: "//*[@id='body-content']/div/div/div[1]/div[2]/div[2]/div[1]/div[4]/button[2]",

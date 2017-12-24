@@ -1,2 +1,2 @@
-require 'watir-webdriver'
+require 'watir'
 require 'csv'
