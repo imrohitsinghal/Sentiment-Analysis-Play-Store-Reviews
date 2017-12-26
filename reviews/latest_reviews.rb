@@ -1,4 +1,4 @@
-require 'watir-webdriver'
+require 'watir'
 
 $locator = {
   see_more: "//*[@id='body-content']/div/div/div[1]/div[2]/div[2]/div[1]/div[4]/button[2]",
@@ -8,10 +8,11 @@ $locator = {
 }
 
 class FetchResponse
-  def initialize(_package = 'nil')
+  def initialize(package)
     @latest = CSV.open('csv/latest_reviews.csv', 'wb')
-    @package = PACKAGE_NAME
-    @url = "https://play.google.com/store/apps/details?id=#{@package}&hl=en"
+    url = "https://play.google.com/store/apps/details?id=#{package}&hl=en"
+    @driver = create_driver
+    @driver.goto(url)
   end
 
   def create_driver
@@ -25,51 +26,59 @@ class FetchResponse
     browser
   end
 
-  def fetch_reviews(reviews_date)
-    get_reviews = true
-    puts 'Fetching Reviews for Date : ' + reviews_date.to_s + '-' + Time.new.month.to_s
-    # @b=Watir::Browser.new :phantomjs
-    # @b.driver.manage.window.maximize
-    @b = create_driver
-    @b.goto(@url)
-    @b.wait 15
-    scroll_down(4)
-    @b.element(xpath: $locator[:see_more]).wait_until_present(60)
-    @b.element(xpath: $locator[:see_more]).click
-    @b.element(class: $locator[:value_dropdown]).wait_until_present(60)
-    @b.button(class: $locator[:value_dropdown]).click
-    sleep 2
-    @b.element(xpath: $locator[:new]).click
-    sleep 2
-    @b.element(xpath: $locator[:see_more]).hover
-    while get_reviews
-      texts = @b.divs(class: $locator[:review_text])
-      texts.each_with_index do |text, index|
-        next if text.text.empty?
-        date = Date.parse(text.text.split("\n")[0])
-        if date.day == reviews_date.to_i
-          @latest << [(text.text.split("\n")[0]).to_s, (text.text.split("\n")[1]).to_s]
-          get_reviews = true
-        elsif date.day == reviews_date.to_i - 1
-          get_reviews = false
-      end
+  def fetch_reviews(requested_date)
+    is_get_reviews = true
+    puts 'Fetching Reviews for Date : ' + requested_date.to_s + '-' + Time.new.month.to_s
+
+    order_reviews_by_newest
+
+    while is_get_reviews
+      reviews = @driver.divs(class: $locator[:review_text])
+      reviews.each do |review|
+        next if review.text.empty?
+        actual_review_date = get_review_date review
+        if actual_review_date.day == requested_date.to_i
+          @latest << [actual_review_date.to_s, (get_review_comment review)]
+        elsif actual_review_date.day == requested_date.to_i - 1
+          is_get_reviews = false
+        end
       end
       sleep 2
-      @b.element(xpath: $locator[:see_more]).click
+      @driver.element(xpath: $locator[:see_more]).click
     end
     close
+  end
+
+  def order_reviews_by_newest
+    scroll_down(4)
+    @driver.element(xpath: $locator[:see_more]).wait_until_present timeout: 30
+    @driver.element(xpath: $locator[:see_more]).click
+    @driver.element(class: $locator[:value_dropdown]).wait_until_present timeout: 30
+    @driver.button(class: $locator[:value_dropdown]).click
+    sleep 2
+    @driver.element(xpath: $locator[:new]).click
+    sleep 2
+    @driver.element(xpath: $locator[:see_more]).hover
+  end
+
+  def get_review_comment(review)
+    (review.text.split("\n")[1]).to_s
+  end
+
+  def get_review_date(review)
+    Date.parse(review.text.split("\n")[0])
   end
 
   def scroll_down(count)
     puts 'Scrolling the page'
     (0..count).each do
-      @b.execute_script("window.scrollBy(0,200)")
+      @driver.execute_script('window.scrollBy(0,200)')
     end
     sleep 3
   end
 
   def close
-    @b.close
+    @driver.close
     @latest.close
   end
 end

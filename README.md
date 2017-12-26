@@ -24,8 +24,7 @@ A utility to generate useful data from reviews/feedback customers/users provide 
 
 ## How to Run:
 1. a. Apply Analytics on daily newest reviews about your app
-   `rake PACKAGE_NAME=<APK_PACKAGE_NAME> REVIEW_DATE=6  reviews:run:all`
-    - `rake PACKAGE_NAME=com.vuclip.viu REVIEW_DATE=6  reviews:run:all`
+   `rake PACKAGE_NAME=<APK_PACKAGE_NAME> REVIEW_DATE=6 AYLIEN_APP_ID=<AYLIEN_APP_ID> AYLIEN_APP_KEY=<AYLIEN_APP_KEY> reviews:run:all`
    
    b. Generate a report for Areas/Functionality to Improve
     `rake PACKAGE_NAME=<APK_PACKAGE_NAME> REVIEW_DATE=6  reviews:run:output`

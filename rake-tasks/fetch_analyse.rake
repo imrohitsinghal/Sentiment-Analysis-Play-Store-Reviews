@@ -38,8 +38,8 @@ end
 
 def configure_cred
   AylienTextApi.configure do |config|
-    config.app_id        =    "<YOUR APP ID>"
-    config.app_key       =    "<YOUR APP KEY>"
+    config.app_id        =    ENV['AYLIEN_APP_ID']
+    config.app_key       =    ENV['AYLIEN_APP_KEY']
   end
 end
 

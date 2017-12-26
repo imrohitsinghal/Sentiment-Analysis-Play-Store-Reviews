@@ -1,18 +1,11 @@
 source 'http://rubygems.org'
 
-gem 'watir-webdriver'
-gem 'rest-client'
-gem 'nokogiri', '~> 1.8.0'
-gem 'pry'
-gem 'bundler'
-gem 'sentimental'
-gem 'mustache', '~> 1.0'
-gem 'smarter_csv'
-gem 'builder'
-gem 'rake'
-gem 'aylien_text_api'
-
-if RUBY_VERSION =~ /1.9/ # assuming you're running Ruby ~1.9
-  Encoding.default_external = Encoding::UTF_8
-  Encoding.default_internal = Encoding::UTF_8
-end
+gem 'watir', '~> 6.0'
+gem 'rest-client', '~> 2.0', '>= 2.0.2'
+gem 'nokogiri', '~> 1.8', '>= 1.8.1'
+gem 'pry', '~> 0.11.3'
+gem 'sentimental', '~> 1.4', '>= 1.4.1'
+gem 'smarter_csv', '~> 1.1', '>= 1.1.5'
+gem 'builder', '~> 3.2', '>= 3.2.3'
+gem 'rake', '~> 12.3'
+gem 'aylien_text_api', '~> 0.7.0'
