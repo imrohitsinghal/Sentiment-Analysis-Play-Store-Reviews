@@ -24,11 +24,12 @@ class AnalyzeReviews
   end
 
   def analyze_each_review
-    puts "***** Analyzing all the newest Reviews *****"
+    puts "***** Analyzing all the Latest Reviews *****"
     textapi = AylienTextApi::Client.new
     CSV.foreach('./csv/latest_reviews.csv') do |row|
       unless row.empty?
         review_map = textapi.sentiment text: row[1]
+        puts row[1].to_s + "----" +review_map[:polarity].to_s
         if review_map[:polarity].to_s == 'negative'
           enter_into_csv @negative, row
           affected_features row[1]

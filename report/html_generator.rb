@@ -15,7 +15,6 @@ class ProduceHtml
   end
 
   def generate_html
-    puts "***** GENERATING OUTPUT *****"
     isEmpty? ? exit : puts { 'Generating HTML' }
     table_data = build_html_table @reviews.sort_by! { |hsh| hsh[:area] }
     html_file  = File.read(__dir__ + '/output.tmpl')

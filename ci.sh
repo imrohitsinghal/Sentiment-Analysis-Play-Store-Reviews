@@ -16,11 +16,11 @@ echo "CURRENT_DIR - " $CURRENT_DIR
 
 date=`expr $(date -v -1d +"%d")`
 echo "*** FETCHING FOR PREVIOUS DAY ***"
-rake PACKAGE_NAME=com.vuclip.viu REVIEW_DATE=$date  reviews:run:all
+rake PACKAGE_NAME=com.trivago REVIEW_DATE=$date  reviews:run:all
 sleep 2
 
 echo "*** ANALYSING THE FEEDBACKS ***"
-rake PACKAGE_NAME=com.vuclip.viu  reviews:run:output
+rake PACKAGE_NAME=com.trivago  reviews:run:output
 sleep 2
 
 

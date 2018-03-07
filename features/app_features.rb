@@ -1,5 +1,5 @@
 #add your major areas of the apps
-FEATURES = ["Login", "Crash", "Delete", "Cancel", "Download", "Yaari",
-            "Error", "Under Maintenance", "Maintainence", "maintance", "Korean",
-            "Arabic", "Content", "Data", "Bandwidth", "Subtitle", "Advertisement", "Not Available",
-            "Offline", "Install", "Premium", "History", "Size"]
+FEATURES = ["Login", "Crash", "Cancel", "Internet", "Credit", "Debit", "Payment", "Location", "Price", "Comparison",
+            "Error", "Under Maintenance", "Maintainence", "Maintance",
+             "Content", "Data", "Bandwidth", "Advertisement", "Not Available", "Connect",
+            "Offline", "Install", "History", "Size", "language"]
