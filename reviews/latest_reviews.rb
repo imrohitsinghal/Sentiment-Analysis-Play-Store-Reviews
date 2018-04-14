@@ -1,15 +1,18 @@
 require 'watir'
 
 $locator = {
-  see_more: "//*[@id='body-content']/div/div/div[1]/div[2]/div[2]/div[1]/div[4]/button[2]",
-  value_dropdown: 'dropdown-menu',
-  new: "//*[contains(text(), 'Newest')]",
-  review_text: 'single-review'
+  see_more: "//*[text()='Read All Reviews']",
+  value_dropdown: "//*[text()='Most helpful first']",
+  new: "//div[@class='OA0qNb ncFHed']/div[1]",
+  review_text: 'div.Z8UXhc',
+  review_date: 'span.oldIDd',
+  review_rating: "//span[@class='qC3s2c']/div/div"
 }
 
 class FetchResponse
   def initialize(package)
     @latest = CSV.open('csv/latest_reviews.csv', 'wb')
+    @all = CSV.open('csv/all_reviews.csv', 'wb')
     url = "https://play.google.com/store/apps/details?id=#{package}&hl=en"
     @driver = create_driver
     @driver.goto(url)
@@ -28,56 +31,83 @@ class FetchResponse
 
   def fetch_reviews(requested_date)
     is_get_reviews = true
-    puts 'Fetching Reviews for Date : ' + requested_date.to_s + '-' + Time.new.month.to_s
-
+    puts '***** Fetching Reviews for Date : ' + requested_date.to_s + '-' + Time.new.month.to_s
     order_reviews_by_newest
-
     while is_get_reviews
-      reviews = @driver.divs(class: $locator[:review_text])
-      reviews.each do |review|
-        next if review.text.empty?
-        actual_review_date = get_review_date review
-        if actual_review_date.day == requested_date.to_i
-          @latest << [actual_review_date.to_s, (get_review_comment review)]
-        elsif actual_review_date.day == requested_date.to_i - 1
+      i,j,k=0,0,0
+      list=[]
+      scroll_down(20)
+      sleep(5)
+      review_text = @driver.elements(css: $locator[:review_text])
+      review_date = @driver.elements(css: $locator[:review_date])
+
+      while i < review_text.size do
+        while j<= i do
+          unless review_text[i].text.empty?
+            list << [review_date[j].text, review_text[i].text]
+          end
+          j+=1
+        end
+        i+=1
+      end
+
+      puts "*****  Adding Review to CSV  *****"
+      while k < list.size  do
+        next if list[k].empty?
+        actual_review_date = list[k][0].split(',')[0]
+        if (actual_review_date.to_s).include?(requested_date.to_s)
+          @latest << [list[k][0], list[k][1]]
+        else
+          @all << [list[k][0], list[k][1]]
           is_get_reviews = false
         end
+        k+=1
       end
-      sleep 2
-      @driver.element(xpath: $locator[:see_more]).click
     end
     close
   end
 
   def order_reviews_by_newest
-    scroll_down(4)
-    @driver.element(xpath: $locator[:see_more]).wait_until_present timeout: 30
+    scroll_till_found(xpath: $locator[:see_more])
     @driver.element(xpath: $locator[:see_more]).click
-    @driver.element(class: $locator[:value_dropdown]).wait_until_present timeout: 30
-    @driver.button(class: $locator[:value_dropdown]).click
-    sleep 2
+    @driver.element(xpath: $locator[:value_dropdown]).wait_until_present timeout: 2
+    @driver.element(xpath: $locator[:value_dropdown]).click
+    @driver.element(xpath: $locator[:new]).wait_until_present timeout: 5
+    puts "***** Sorting by All Newest Reviews *****"
     @driver.element(xpath: $locator[:new]).click
-    sleep 2
-    @driver.element(xpath: $locator[:see_more]).hover
   end
 
   def get_review_comment(review)
-    (review.text.split("\n")[1]).to_s
-  end
-
-  def get_review_date(review)
-    Date.parse(review.text.split("\n")[0])
+    @driver.elements(css: $locator[:review_date])
   end
 
   def scroll_down(count)
     puts 'Scrolling the page'
     (0..count).each do
-      @driver.execute_script('window.scrollBy(0,200)')
+      @driver.execute_script('window.scrollBy(0,500)')
     end
-    sleep 3
+  end
+
+  def scroll_till_found(locator)
+    found = false
+    count=0
+    begin
+      while found != true && count<15
+        if @driver.element(locator).exists?
+          found = true
+        else
+          @driver.execute_script("window.scrollBy(0,250)")
+          sleep 3
+          count +=1
+        end
+      end
+    rescue RuntimeError
+      puts "Unable to find element on complete screen"
+    end
   end
 
   def close
+    puts "**** Closing the browser ****"
     @driver.close
     @latest.close
   end
