@@ -1,18 +1,18 @@
 require 'watir'
 
 $locator = {
-  see_more: "//*[text()='Read All Reviews']",
-  value_dropdown: "//*[text()='Most helpful first']",
-  new: "//div[@class='OA0qNb ncFHed']/div[1]",
-  review_text: 'div.Z8UXhc',
-  review_date: 'span.oldIDd',
-  review_rating: "//span[@class='qC3s2c']/div/div"
+    see_more: "//*[text()='Read All Reviews']",
+    value_dropdown: "//*[text()='Most helpful first']",
+    new: "//div[@class='OA0qNb ncFHed']/div[1]",
+    review_text: 'div.Z8UXhc',
+    review_date: 'span.oldIDd',
+    review_rating: "//span[@class='qC3s2c']/div/div"
 }
 
 class FetchResponse
   def initialize(package)
-    @latest = CSV.open('csv/latest_reviews.csv', 'wb')
-    @all = CSV.open('csv/all_reviews.csv', 'wb')
+    @filtered = CSV.open('csv/filtered_reviews.csv', 'wb')
+    @newest = CSV.open('csv/newest_reviews.csv', 'wb')
     url = "https://play.google.com/store/apps/details?id=#{package}&hl=en"
     @driver = create_driver
     @driver.goto(url)
@@ -30,38 +30,39 @@ class FetchResponse
   end
 
   def fetch_reviews(requested_date)
+    requested_date = requested_date.split(",")
     is_get_reviews = true
-    puts '***** Fetching Reviews for Date : ' + requested_date.to_s + '-' + Time.new.month.to_s
+    puts '***** Fetching Reviews for Date : ' + requested_date.to_s + '-' + Date.today.strftime("%B").to_s
     order_reviews_by_newest
     while is_get_reviews
-      i,j,k=0,0,0
-      list=[]
+      i, j, k = 0, 0, 0
+      list = []
       scroll_down(20)
       sleep(5)
       review_text = @driver.elements(css: $locator[:review_text])
       review_date = @driver.elements(css: $locator[:review_date])
-
+      puts "Reviews Count: " + review_text.size.to_s
       while i < review_text.size do
-        while j<= i do
+        while j <= i do
           unless review_text[i].text.empty?
             list << [review_date[j].text, review_text[i].text]
           end
-          j+=1
+          j += 1
         end
-        i+=1
+        i += 1
       end
 
-      puts "*****  Adding Review to CSV  *****"
-      while k < list.size  do
+      puts "*****  Adding Reviews to CSV  *****"
+      while k < list.size do
         next if list[k].empty?
-        actual_review_date = list[k][0].split(',')[0]
-        if (actual_review_date.to_s).include?(requested_date.to_s)
-          @latest << [list[k][0], list[k][1]]
+        actual_review_date = list[k][0].split(',')[0].split(' ')[1]
+        if !(requested_date.select {|str| str == actual_review_date}).empty?
+          @filtered << [list[k][0], list[k][1]]
         else
-          @all << [list[k][0], list[k][1]]
+          @newest << [list[k][0], list[k][1]]
           is_get_reviews = false
         end
-        k+=1
+        k += 1
       end
     end
     close
@@ -73,7 +74,7 @@ class FetchResponse
     @driver.element(xpath: $locator[:value_dropdown]).wait_until_present timeout: 2
     @driver.element(xpath: $locator[:value_dropdown]).click
     @driver.element(xpath: $locator[:new]).wait_until_present timeout: 5
-    puts "***** Sorting by All Newest Reviews *****"
+    puts "***** Sorting by - Newest Reviews *****"
     @driver.element(xpath: $locator[:new]).click
   end
 
@@ -90,15 +91,15 @@ class FetchResponse
 
   def scroll_till_found(locator)
     found = false
-    count=0
+    count = 0
     begin
-      while found != true && count<15
+      while found != true && count < 15
         if @driver.element(locator).exists?
           found = true
         else
           @driver.execute_script("window.scrollBy(0,250)")
           sleep 3
-          count +=1
+          count += 1
         end
       end
     rescue RuntimeError
@@ -109,6 +110,7 @@ class FetchResponse
   def close
     puts "**** Closing the browser ****"
     @driver.close
-    @latest.close
+    @filtered.close
+    @newest.close
   end
 end
