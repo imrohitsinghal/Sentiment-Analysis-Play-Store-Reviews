@@ -26,7 +26,7 @@ class ProduceHtml
 
   def isEmpty?
     exit_status = false
-    if File.empty?('csv/latest_reviews.csv') || File.empty?('csv/functionality_reviews.csv')
+    if File.zero?('csv/newest_reviews.csv') || File.zero?('csv/functionality_reviews.csv')
       puts 'No Reviews Present. Please check input date'
       exit_status = true
     end
