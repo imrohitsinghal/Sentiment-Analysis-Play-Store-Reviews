@@ -4,8 +4,8 @@ $locator = {
     see_more: "//*[text()='Read All Reviews']",
     value_dropdown: "//*[text()='Most helpful first']",
     new: "//div[@class='OA0qNb ncFHed']/div[1]",
-    review_text: 'div.Z8UXhc',
-    review_date: 'span.oldIDd',
+    review_text: 'div.UD7Dzf',
+    review_date: "//div[@class='bAhLNe kx8XBd']/div/span[@class='p2TkOb']",
     review_rating: "//span[@class='qC3s2c']/div/div"
 }
 
@@ -37,11 +37,11 @@ class FetchResponse
     while is_get_reviews
       i, j, k = 0, 0, 0
       list = []
-      scroll_down(20)
-      sleep(5)
+      scroll_down(12)
+      sleep(2)
       review_text = @driver.elements(css: $locator[:review_text])
-      review_date = @driver.elements(css: $locator[:review_date])
-      puts "Reviews Count: " + review_text.size.to_s
+      review_date = @driver.elements(xpath: $locator[:review_date])
+      puts "\n ****** Reviews Count: " + review_text.size.to_s
       while i < review_text.size do
         while j <= i do
           unless review_text[i].text.empty?
@@ -52,9 +52,11 @@ class FetchResponse
         i += 1
       end
 
-      puts "*****  Adding Reviews to CSV  *****"
+      puts "\n *****  Adding Reviews to CSV  ***** \n"
       while k < list.size do
         next if list[k].empty?
+        # require 'pry'
+        # binding.pry
         actual_review_date = list[k][0].split(',')[0].split(' ')[1]
         if !(requested_date.select {|str| str == actual_review_date}).empty?
           @filtered << [list[k][0], list[k][1]]
@@ -74,7 +76,7 @@ class FetchResponse
     @driver.element(xpath: $locator[:value_dropdown]).wait_until_present timeout: 2
     @driver.element(xpath: $locator[:value_dropdown]).click
     @driver.element(xpath: $locator[:new]).wait_until_present timeout: 5
-    puts "***** Sorting by - Newest Reviews *****"
+    puts "\n ***** Sorting by - Newest Reviews ***** \n"
     @driver.element(xpath: $locator[:new]).click
   end
 
@@ -83,9 +85,14 @@ class FetchResponse
   end
 
   def scroll_down(count)
-    puts 'Scrolling the page'
-    (0..count).each do
-      @driver.execute_script('window.scrollBy(0,500)')
+    begin
+      (0..count).each do
+        puts 'Scrolling the page to load more reviews on the page'
+      @driver.execute_script('window.scrollBy(0,1000)')
+        sleep(0.5)
+      end
+  rescue UnknownError
+      puts "\n Unable to Scroll \n"
     end
   end
 
@@ -94,7 +101,7 @@ class FetchResponse
     count = 0
     begin
       while found != true && count < 15
-        if @driver.element(locator).exists?
+        if @driver.element(locator).scroll_into_view
           found = true
         else
           @driver.execute_script("window.scrollBy(0,250)")
@@ -103,12 +110,12 @@ class FetchResponse
         end
       end
     rescue RuntimeError
-      puts "Unable to find element on complete screen"
+      puts "Unable to find element on complete screen \n"
     end
   end
 
   def close
-    puts "**** Closing the browser ****"
+    puts "\n **** Closing the browser **** \n"
     @driver.close
     @filtered.close
     @newest.close
